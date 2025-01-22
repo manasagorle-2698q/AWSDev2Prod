@@ -152,5 +152,5 @@ jobs:
           subject: "Code Deployed to Prod Environment"
           body: "The latest code has been successfully deployed to the prod environment. Visit the site at ${{ secrets.PROD_HOMEPAGE_URL }}."
           to: "manasagorle17@gmail.com"
-          from: "manasa3598@gmail.com"
+          from: "manasag3598@gmail.com"
  
