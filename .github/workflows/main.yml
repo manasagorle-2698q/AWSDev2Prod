@@ -47,14 +47,14 @@ jobs:
  
       # Step 6: List dist directory for debugging
       - name: List Build directory
-        run: ls -alh ./build || echo "Build directory not found"
+        run: ls -alh ./dist || echo "Build directory not found"
  
       # Step 7: Deploy to Netlify (dev branch)
       - name: Deploy to Netlify (dev)
         if: github.ref == 'refs/heads/dev'
         uses: nwtgck/actions-netlify@v3
         with:
-          publish-dir: ./build
+          publish-dir: ./dist
           production-deploy: false
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -71,8 +71,8 @@ jobs:
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "Code Deployed to Dev Environment"
           body: "The latest code has been successfully deployed to the dev environment. Visit the site at ${{ secrets.HOMEPAGE_URL }}."
-          to: "gogulateja92@gmail.com"
-          from: "gogulanavateja1910@gmail.com"
+          to: "manasagorle17@gmail.com"
+          from: "manasag3598@gmail.com"
  
   create-pull-request:
     name: Create Pull Request for Dev to Prod
@@ -134,7 +134,7 @@ jobs:
       - name: Deploy to Netlify (Prod)
         uses: nwtgck/actions-netlify@v3
         with:
-          publish-dir: ./build
+          publish-dir: ./dist
           production-deploy: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
