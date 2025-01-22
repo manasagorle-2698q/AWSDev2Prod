@@ -106,8 +106,8 @@ jobs:
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "Pull Request Created: Dev to Prod"
           body: "A pull request has been created to merge changes from the dev branch to the prod branch."
-          to: "gogulateja92@gmail.com"
-          from: "gogulanavateja1910@gmail.com"
+          to: "manasagorle17@gmail.com"
+          from: "manasag3598@gmail.com"
  
   deploy-to-netlify-prod:
     name: Deploy to Netlify (Prod)
@@ -153,4 +153,3 @@ jobs:
           body: "The latest code has been successfully deployed to the prod environment. Visit the site at ${{ secrets.PROD_HOMEPAGE_URL }}."
           to: "manasagorle17@gmail.com"
           from: "manasag3598@gmail.com"
- 
