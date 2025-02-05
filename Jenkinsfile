@@ -42,7 +42,7 @@ pipeline {
                 script {
                     sh '''
                         echo "🧹 Cleaning old dependencies..."
-                        cd Netlify
+                        cd AWSDev2Prod
                         rm -rf node_modules package-lock.json
                         echo "📦 Installing dependencies..."
                         npm install || { echo "❌ Failed to install dependencies"; exit 1; }
@@ -55,7 +55,7 @@ pipeline {
                 script {
                     sh '''
                         echo "🧪 Running test cases..."
-                        cd Netlify
+                        cd AWSDev2Prod
                         npm test || { echo "❌ Tests failed"; exit 1; }
                         echo "✅ All tests passed!"
                     '''
@@ -67,21 +67,21 @@ pipeline {
                 script {
                     echo "📌 Creating pull request for merging dev into prod..."
                     sh '''
-                        cd Netlify
+                        cd AWSDev2Prod
  
                         # Set GitHub credentials to authenticate
-                        git config --global user.email "svanaparthy@anergroup.com"
-                        git config --global user.name "SrikarVanaparthy"
+                        git config --global user.email "mgorle@anergroup.com"
+                        git config --global user.name "manasagorle-2698q"
  
                         # Update the origin URL with the GitHub token
-                        git remote set-url origin https://$GITHUB_TOKEN@github.com/manasagorle-2698q/GitNetlify.git
+                        git remote set-url origin https://$GITHUB_TOKEN@github.com/manasagorle-2698q/AWSDev2Prod.git
                         git fetch origin
  
                         # Create Pull Request and capture response
                         PR_RESPONSE=$(curl -s -o response.json -w "%{http_code}" -X POST \
                             -H "Authorization: token $GITHUB_TOKEN" \
                             -H "Accept: application/vnd.github.v3+json" \
-https://api.github.com/repos/manasagorle-2698q/GitNetlify/pulls \
+https://api.github.com/repos/manasagorle-2698q/AWSDev2Prod/pulls \
                             -d '{
                                 "title": "Merge dev into prod",
                                 "head": "dev",
@@ -108,7 +108,7 @@ https://api.github.com/repos/manasagorle-2698q/GitNetlify/pulls \
                 script {
                     echo "⏳ Waiting for the PR to be merged manually..."
                     sh '''
-                        cd Netlify
+                        cd AWSDev2Prod
                         while true; do
                             # Fetch the latest commits from the remote repository
                             git fetch origin
@@ -145,7 +145,7 @@ https://api.github.com/repos/manasagorle-2698q/GitNetlify/pulls \
                     sh '''
                         echo "🚀 Deploying to Netlify..."
                         # Ensure you're on the prod branch and have the latest code
-                        cd Netlify
+                        cd AWSDev2Prod
                         git checkout prod
                         git pull origin prod
                         # Install Netlify CLI globally
