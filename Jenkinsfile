@@ -42,7 +42,7 @@ pipeline {
                 script {
                     sh '''
                         echo "🧹 Cleaning old dependencies..."
-                        cd AWSDev2Prod
+                        cd Netlify
                         rm -rf node_modules package-lock.json
                         echo "📦 Installing dependencies..."
                         npm install || { echo "❌ Failed to install dependencies"; exit 1; }
@@ -55,7 +55,7 @@ pipeline {
                 script {
                     sh '''
                         echo "🧪 Running test cases..."
-                        cd AWSDev2Prod
+                        cd Netlify
                         npm test || { echo "❌ Tests failed"; exit 1; }
                         echo "✅ All tests passed!"
                     '''
@@ -67,7 +67,7 @@ pipeline {
                 script {
                     echo "📌 Creating pull request for merging dev into prod..."
                     sh '''
-                        cd AWSDev2Prod
+                        cd Netlify
  
                         # Set GitHub credentials to authenticate
                         git config --global user.email "mgorle@anergroup.com"
@@ -108,7 +108,7 @@ https://api.github.com/repos/manasagorle-2698q/AWSDev2Prod/pulls \
                 script {
                     echo "⏳ Waiting for the PR to be merged manually..."
                     sh '''
-                        cd AWSDev2Prod
+                        cd Netlify
                         while true; do
                             # Fetch the latest commits from the remote repository
                             git fetch origin
@@ -145,7 +145,7 @@ https://api.github.com/repos/manasagorle-2698q/AWSDev2Prod/pulls \
                     sh '''
                         echo "🚀 Deploying to Netlify..."
                         # Ensure you're on the prod branch and have the latest code
-                        cd AWSDev2Prod
+                        cd Netlify
                         git checkout prod
                         git pull origin prod
                         # Install Netlify CLI globally
