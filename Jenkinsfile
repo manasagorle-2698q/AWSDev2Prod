@@ -63,45 +63,55 @@ pipeline {
             }
         }
         stage('Create Pull Request for Production Merge') {
-            steps {
-                script {
-                    echo "📌 Creating pull request for merging dev into prod..."
-                    sh '''
-                        cd Netlify
- 
-                        # Set GitHub credentials to authenticate
-                        git config --global user.email "mgorle@anergroup.com"
-                        git config --global user.name "manasagorle-2698q"
- 
-                        # Update the origin URL with the GitHub token
-                        git remote set-url origin https://$GITHUB_TOKEN@github.com/manasagorle-2698q/AWSDev2Prod.git
-                        git fetch origin
- 
-                        # Create Pull Request and capture response
-                        PR_RESPONSE=$(curl -s -o response.json -w "%{http_code}" -X POST \
-                            -H "Authorization: token $GITHUB_TOKEN" \
-                            -H "Accept: application/vnd.github.v3+json" \
-https://api.github.com/repos/manasagorle-2698q/AWSDev2Prod/pulls \
-                            -d '{
-                                "title": "Merge dev into prod",
-                                "head": "dev",
-                                "base": "prod",
-                                "body": "Auto-generated pull request for merging dev into prod."
-                            }'
-                        )
- 
-                        # Check the HTTP response code for success (201)
-                        if [ "$PR_RESPONSE" -eq 201 ]; then
-                            echo "✅ Pull request created successfully. Please review and merge manually."
-                        else
-                            echo "❌ Failed to create pull request."
-                            cat response.json  # Show detailed error from GitHub
-                            exit 1  # Fail the pipeline
-                        fi
-                    '''
-                }
-            }
+    steps {
+        script {
+            echo "📌 Checking if there are new commits to merge..."
+            sh '''
+                cd Netlify
+
+                # Set GitHub credentials
+                git config --global user.email "mgorle@anergroup.com"
+                git config --global user.name "manasagorle-2698q"
+
+                # Fetch latest changes from remote
+                git fetch origin
+
+                # Check if there are new commits in dev that are not in prod
+                NEW_COMMITS=$(git log origin/prod..origin/dev --oneline)
+
+                if [ -z "$NEW_COMMITS" ]; then
+                    echo "✅ No new commits to merge. Skipping PR creation."
+                    exit 0  # Exit gracefully without failing the pipeline
+                fi
+
+                echo "📌 Creating pull request for merging dev into prod..."
+                
+                # Create Pull Request and capture response
+                PR_RESPONSE=$(curl -s -o response.json -w "%{http_code}" -X POST \
+                    -H "Authorization: token $GITHUB_TOKEN" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    https://api.github.com/repos/manasagorle-2698q/AWSDev2Prod/pulls \
+                    -d '{
+                        "title": "Merge dev into prod",
+                        "head": "dev",
+                        "base": "prod",
+                        "body": "Auto-generated pull request for merging dev into prod."
+                    }'
+                )
+
+                # Check HTTP response for success (201)
+                if [ "$PR_RESPONSE" -eq 201 ]; then
+                    echo "✅ Pull request created successfully. Please review and merge manually."
+                else
+                    echo "❌ Failed to create pull request."
+                    cat response.json  # Show detailed error from GitHub
+                    exit 1  # Fail the pipeline
+                fi
+            '''
         }
+    }
+}
+
  
        stage('Wait for PR Merge') {
             steps {
