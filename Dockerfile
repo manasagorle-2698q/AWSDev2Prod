@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 1. Use an official Node image to build the React app
 FROM node:16-alpine AS build
 
@@ -21,5 +22,18 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Expose port 80 and run NGINX
+EXPOSE 3000
+
+# Use Node.js for building React
+FROM node:20 AS builder
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Use Nginx for serving the app
+FROM nginx:alpine
+COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 3000
 CMD ["nginx", "-g", "daemon off;"]
