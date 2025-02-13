@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # 1. Use an official Node image to build the React app
 FROM node:16-alpine AS build
 
