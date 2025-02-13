@@ -3,7 +3,7 @@ name: Multi-Environment Deployment
 on:
   push:
     branches:
-      - dev
+      - main
   workflow_dispatch:
  
 permissions:
@@ -58,4 +58,4 @@ jobs:
       # Step 9: Push Docker Image to Docker Hub
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/testrepo:latest
+          docker push ${{ secrets.DOCKER_USERNAME}}/testrepo:latest
