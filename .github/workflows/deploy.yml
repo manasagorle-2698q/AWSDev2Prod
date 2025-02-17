@@ -47,7 +47,7 @@ jobs:
       # Step 6: Deploy to AWS ECS
       - name: Deploy to AWS ECS
         run: |
-          aws ecs update-service --cluster todo-app-cluster --service todo-app-service --force-new-deployment
+          aws ecs update-service --cluster todo-cluster --service todo-app-service --force-new-deployment
  
   rollback-on-failure:
     name: Rollback on Failure
