@@ -47,7 +47,7 @@ jobs:
       # Step 6: Deploy to AWS ECS
       - name: Deploy to AWS ECS
         run: |
-          aws ecs update-service --cluster todo-cluster --service todo-app-service --force-new-deployment
+          aws ecs update-service --cluster todo-cluster --service todo-service --force-new-deployment
  
   rollback-on-failure:
     name: Rollback on Failure
@@ -66,5 +66,5 @@ jobs:
       - name: Rollback to Previous ECS Deployment
         run: |
           LATEST_TASK_DEF=$(aws ecs describe-task-definition --task-definition todo-apps-task --query "taskDefinition.taskDefinitionArn" --output text)
-          aws ecs update-service --cluster todo-app-cluster --service todo-app-service --task-definition $LATEST_TASK_DEF
+          aws ecs update-service --cluster todo-cluster --service todo-service --task-definition $LATEST_TASK_DEF
  
